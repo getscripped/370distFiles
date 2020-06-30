@@ -1,19 +1,29 @@
-version: '0.2'
+version: 0.2
+
 phases:
   install:
-    runtime-versions:
-      nodejs: 12
+    commands:
+      # install dependencies
+      - echo Installng source NPM dependencies...
+      - npm install npm@latest -g
+      - npm install -g @angular/cli
+
   pre_build:
     commands:
-      - echo "Prebuild, installing npm dependencies"
+      - echo Prebuild steps
       - npm install
+
   build:
+    commandS:
+      # build angular app
+      - echo Build started on `date`
+      - ng build
+
+  post_build:
     commands:
-      - echo "Starting the build step"
-      - npm run build
-      - echo "Finished"
-artifacts:
-  name: "BuildOutput"
-  files:
-    - '**/*'
- 
+      # clear S3 bucket
+      - aws s3 rm s3://${S3_BUCKET} --recursive
+      - echo S3 bucket cleared
+      # copy files from dist folder into S3 bucket
+      - aws s3 cp dist s3://${S3_BUCKET} --recursive
+      - echo Build completed on `date`
