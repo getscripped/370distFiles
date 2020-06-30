@@ -1,21 +1,12 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      # install dependencies
-      - echo Installng source NPM dependencies...
-      - npm install npm@latest -g
-      - npm install -g @angular/cli
-
+  
   pre_build:
     commands:
-      - echo Prebuild steps
       - npm install
-
   build:
-    commandS:
-      # build angular app
-      - echo Build started on `date`
-      - ng build
+    commands:
+      - npm run "ng build --prod"
 
+  
